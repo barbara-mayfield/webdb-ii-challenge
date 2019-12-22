@@ -33,4 +33,29 @@ router.post("/", async (req, res, next) => {
   }
 })
 
+router.put("/:id", async (req, res, next) => {
+    try {
+        const payload = {
+            VIN: req.body.VIN,
+            make: req.body.make,
+            model: req.body.model,
+            mileage: req.body.mileage
+        }
+
+        await db("cars").where("id", req.params.id).update(payload)
+        res.json(await db("cars").where("id", req.params.id))
+    } catch (err) {
+        next(err)
+    }
+})
+
+router.delete("/:id", async (req, res, next) => {
+    try {
+        await db("cars").where("id", req.params.id).del()
+        res.status(204).end()
+    } catch (err) {
+        next(err)
+    }
+})
+
 module.exports = router;
